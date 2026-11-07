@@ -11,10 +11,31 @@
 Requires the Honorific plugin and Pear Desktop's built-in API Server plugin.</Description>
     <RepoUrl>https://github.com/InSearchOfName/PearsHonorific</RepoUrl>
     <Tags>pear;youtube music;music;activity;honorific</Tags>
-    <IconUrl>https://raw.githubusercontent.com/InSearchOfName/PearsHonorific/master/PearHonorific/images/icon.png</IconUrl>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Scriban" Version="7.2.6" />
   </ItemGroup>
+
+  <!-- DalamudPackager only zips the build output; add images/icon.png so Dalamud shows the icon from the installed plugin folder. -->
+  <UsingTask TaskName="AddIconToZip" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <ZipPath ParameterType="System.String" Required="true" />
+      <IconPath ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.IO.Compression" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        using (var zip = ZipFile.Open(ZipPath, ZipArchiveMode.Update))
+        {
+            zip.GetEntry("images/icon.png")?.Delete();
+            zip.CreateEntryFromFile(IconPath, "images/icon.png");
+        }
+      ]]></Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="AddIconToZip" AfterTargets="DefaultDalamudPackagerRelease" Condition="'$(Configuration)' == 'Release'">
+    <AddIconToZip ZipPath="$(OutputPath)$(AssemblyName)/latest.zip" IconPath="$(MSBuildProjectDirectory)/images/icon.png" />
+  </Target>
 </Project>

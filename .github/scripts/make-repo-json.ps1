@@ -3,7 +3,6 @@ param(
     [Parameter(Mandatory)] [string] $Repository, # owner/name
     [Parameter(Mandatory)] [string] $Tag,
     [Parameter(Mandatory)] [string] $OutPath,
-    [string] $Branch = 'master',
     [int] $DownloadCount = 0
 )
 
@@ -18,7 +17,6 @@ $extra = [ordered]@{
     DownloadLinkInstall = $download
     DownloadLinkUpdate  = $download
     DownloadLinkTesting = $download
-    IconUrl             = "https://raw.githubusercontent.com/$Repository/$Branch/PearHonorific/images/icon.png"
     DownloadCount       = $DownloadCount
     LastUpdate          =[DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
 }
