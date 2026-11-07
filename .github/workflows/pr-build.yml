@@ -43,7 +43,7 @@ jobs:
         /d:sonar.token="$env:SONAR_TOKEN"
         /d:sonar.host.url="https://sonarcloud.io"
         /d:sonar.cs.opencover.reportsPaths="TestResults/**/coverage.opencover.xml"
-        /d:sonar.coverage.exclusions="PearHonorific/Windows/**,PearHonorific/Pear/PearApiClient.cs,PearHonorific/Plugin.cs,PearHonorific/Core/HonorificIpc.cs,PearHonorific/Configuration.cs"
+        /d:sonar.coverage.exclusions=".github/**,PearHonorific/Windows/**,PearHonorific/Pear/PearApiClient.cs,PearHonorific/Plugin.cs,PearHonorific/Core/HonorificIpc.cs,PearHonorific/Configuration.cs"
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
