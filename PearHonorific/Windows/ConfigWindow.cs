@@ -110,6 +110,23 @@ public class ConfigWindow : Window, IDisposable
         if (plugin.LastError != null)
             ImGui.TextColored(new Vector4(1f, 0.4f, 0.4f, 1f), plugin.LastError);
 
+        var scroll = config.ScrollLongTitles;
+        if (ImGui.Checkbox("Scroll titles longer than 32 characters", ref scroll))
+            Change(() => config.ScrollLongTitles = scroll);
+        if (config.ScrollLongTitles)
+        {
+            ImGui.SameLine();
+            var speed = config.ScrollSpeed;
+            ImGui.SetNextItemWidth(120);
+            if (ImGui.SliderFloat("chars/sec", ref speed, 0.5f, 6f, "%.1f"))
+                Change(() => config.ScrollSpeed = speed);
+
+            ImGui.TextColored(new Vector4(1f, 0.85f, 0.3f, 1f),
+                "Note: Lightless Sync can't update titles as fast as the speed set here,");
+            ImGui.TextColored(new Vector4(1f, 0.85f, 0.3f, 1f),
+                "so the scrolling may look choppy or odd to other players.");
+        }
+
         var prefix = config.IsPrefix;
         if (ImGui.Checkbox("Show before name (prefix)", ref prefix))
             Change(() => config.IsPrefix = prefix);
@@ -134,6 +151,29 @@ public class ConfigWindow : Window, IDisposable
             var g = config.Glow;
             if (ImGui.ColorEdit3("##glow", ref g, ImGuiColorEditFlags.NoInputs))
                 Change(() => config.Glow = g);
+
+            ImGui.TextColored(new Vector4(1f, 0.85f, 0.3f, 1f),
+                "Note: the glow options (especially the gradient) haven't been fully tested and may not look right.");
+
+            ImGui.Indent();
+            var gradient = config.UseGlowGradient;
+            if (ImGui.Checkbox("Two-color gradient", ref gradient))
+                Change(() => config.UseGlowGradient = gradient);
+            if (config.UseGlowGradient)
+            {
+                ImGui.SameLine();
+                var g2 = config.GlowColor2;
+                if (ImGui.ColorEdit3("##glow2", ref g2, ImGuiColorEditFlags.NoInputs))
+                    Change(() => config.GlowColor2 = g2);
+
+                ImGui.SameLine();
+                ImGui.SetNextItemWidth(90);
+                var style = (int)config.GlowAnimation;
+                if (ImGui.Combo("##glowstyle", ref style, "Pulse\0Wave\0"))
+                    Change(() => config.GlowAnimation = (GlowAnimation)style);
+                ImGui.TextDisabled("Pulse: the whole glow shifts together. Wave: the colors travel across the text.");
+            }
+            ImGui.Unindent();
         }
 
         var rainbow = config.RainbowMode;

@@ -15,8 +15,9 @@ A [Dalamud](https://dalamud.dev) plugin for FFXIV that shows the song playing in
 - `/pearhonorific` opens the settings, `/pearhonorific toggle` enables or disables the plugin.
 - The title template uses [Scriban](https://github.com/scriban/scriban). Variables: `song.title`, `song.artist`, `song.album`, `song.duration`, `song.url`, `context.secs_elapsed`.
   - Cycle text: `{{ if context.secs_elapsed % 20 < 10 }}{{ song.title }}{{ else }}{{ song.artist }}{{ end }}`
-- Honorific titles are limited to 32 characters; longer output is truncated.
-- Options: prefix, color, glow, rainbow mode, clear when paused, clear while AFK.
+- Honorific titles are limited to 32 characters. Longer output is truncated, or (with "Scroll titles" on) scrolls left one character at a time like a train station board, with an adjustable speed. Note: Lightless Sync can't update titles as fast as you may set, so scrolling can look choppy to other players.
+- Options: prefix, color, glow (optionally a two-color wave or pulse gradient, like Honorific's own), rainbow mode, clear when paused, clear while AFK.
+  - The glow options (especially the gradient) are not fully tested yet and may not look right.
 
 ## How it works
 

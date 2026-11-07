@@ -16,11 +16,33 @@ public sealed class TitleRenderingService
     private Template? template;
     private string? templateSource;
 
-    /// <summary>Renders the template; returns null on empty output. Sets <paramref name="error"/> on template errors.</summary>
-    public string? Render(string source, SongInfo song, double elapsedSeconds, out string? error, out bool truncated)
+    private const string ScrollGap = " • ";
+
+    /// <summary>
+    /// Fits <paramref name="text"/> into <see cref="MaxTitleLength"/>. Short text is returned as is;
+    /// long text is either cut off or, when scrolling, a window that moves left one character at a time and wraps around.
+    /// </summary>
+    public static string Fit(string text, bool scroll, double scrollSecs, float charsPerSecond, out bool truncated)
+    {
+        truncated = false;
+        if (text.Length <= MaxTitleLength) return text;
+
+        if (!scroll)
+        {
+            truncated = true;
+            return text[..MaxTitleLength].TrimEnd();
+        }
+
+        var loop = text + ScrollGap;
+        var offset = (int)(scrollSecs * Math.Max(charsPerSecond, 0.1f)) % loop.Length;
+        var doubled = loop + loop;
+        return doubled.Substring(offset, MaxTitleLength).Trim();
+    }
+
+    /// <summary>Renders the template; returns null on empty output. Sets <paramref name="error"/> on template errors. Not length limited, see <see cref="Fit"/>.</summary>
+    public string? Render(string source, SongInfo song, double elapsedSeconds, out string? error)
     {
         error = null;
-        truncated = false;
 
         if (template == null || templateSource != source)
         {
@@ -59,13 +81,7 @@ public sealed class TitleRenderingService
             return null;
         }
 
-        if (text.Length == 0) return null;
-        if (text.Length > MaxTitleLength)
-        {
-            text = text[..MaxTitleLength].TrimEnd();
-            truncated = true;
-        }
-        return text;
+        return text.Length == 0 ? null : text;
     }
 
     /// <summary>JSON payload for Honorific.SetCharacterTitle. Colors are 0-1 floats.</summary>
@@ -83,7 +99,16 @@ public sealed class TitleRenderingService
             data["Color"] = config.Color;
 
         if (config.UseGlow)
+        {
             data["Glow"] = config.Glow;
+            if (config.UseGlowGradient)
+            {
+                // -1 = custom two colour gradient between Glow and Color3
+                data["Color3"] = config.GlowColor2;
+                data["GradientColourSet"] = -1;
+                data["GradientAnimationStyle"] = (int)config.GlowAnimation;
+            }
+        }
 
         return JsonConvert.SerializeObject(data, Formatting.None);
     }
