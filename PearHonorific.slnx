@@ -2,4 +2,7 @@
   <Project Path="PearHonorific/PearHonorific.csproj">
     <Platform Project="x64" />
   </Project>
+  <Project Path="PearHonorific.Tests/PearHonorific.Tests.csproj">
+    <Platform Project="x64" />
+  </Project>
 </Solution>

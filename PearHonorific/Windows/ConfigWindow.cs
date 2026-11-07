@@ -6,7 +6,7 @@ using PearHonorific.Pear;
 
 namespace PearHonorific.Windows;
 
-public class ConfigWindow : Window, IDisposable
+public sealed class ConfigWindow : Window, IDisposable
 {
     private readonly Plugin plugin;
     private readonly Configuration config;
@@ -86,9 +86,15 @@ public class ConfigWindow : Window, IDisposable
             ImGui.TextColored(new Vector4(1f, 0.4f, 0.4f, 1f), "Honorific isn't loaded - install and enable it.");
 
         var song = plugin.Pear.CurrentSong;
-        ImGui.TextDisabled(song == null
-            ? "Nothing playing"
-            : $"{(plugin.Pear.IsPlaying ? "Playing" : "Paused")}: {song.Title} - {song.Artist}");
+        if (song == null)
+        {
+            ImGui.TextDisabled("Nothing playing");
+        }
+        else
+        {
+            var state = plugin.Pear.IsPlaying ? "Playing" : "Paused";
+            ImGui.TextDisabled($"{state}: {song.Title} - {song.Artist}");
+        }
     }
 
     private void DrawTitleSettings()
@@ -110,6 +116,22 @@ public class ConfigWindow : Window, IDisposable
         if (plugin.LastError != null)
             ImGui.TextColored(new Vector4(1f, 0.4f, 0.4f, 1f), plugin.LastError);
 
+        DrawScrollSettings();
+
+        var prefix = config.IsPrefix;
+        if (ImGui.Checkbox("Show before name (prefix)", ref prefix))
+            Change(() => config.IsPrefix = prefix);
+
+        DrawColorSettings();
+        DrawGlowSettings();
+
+        var rainbow = config.RainbowMode;
+        if (ImGui.Checkbox("Rainbow mode (overrides color)", ref rainbow))
+            Change(() => config.RainbowMode = rainbow);
+    }
+
+    private void DrawScrollSettings()
+    {
         var scroll = config.ScrollLongTitles;
         if (ImGui.Checkbox("Scroll titles longer than 32 characters", ref scroll))
             Change(() => config.ScrollLongTitles = scroll);
@@ -126,11 +148,10 @@ public class ConfigWindow : Window, IDisposable
             ImGui.TextColored(new Vector4(1f, 0.85f, 0.3f, 1f),
                 "so the scrolling may look choppy or odd to other players.");
         }
+    }
 
-        var prefix = config.IsPrefix;
-        if (ImGui.Checkbox("Show before name (prefix)", ref prefix))
-            Change(() => config.IsPrefix = prefix);
-
+    private void DrawColorSettings()
+    {
         var useColor = config.UseColor;
         if (ImGui.Checkbox("Custom color", ref useColor))
             Change(() => config.UseColor = useColor);
@@ -141,7 +162,10 @@ public class ConfigWindow : Window, IDisposable
             if (ImGui.ColorEdit3("##color", ref c, ImGuiColorEditFlags.NoInputs))
                 Change(() => config.Color = c);
         }
+    }
 
+    private void DrawGlowSettings()
+    {
         var useGlow = config.UseGlow;
         if (ImGui.Checkbox("Glow", ref useGlow))
             Change(() => config.UseGlow = useGlow);
@@ -175,10 +199,6 @@ public class ConfigWindow : Window, IDisposable
             }
             ImGui.Unindent();
         }
-
-        var rainbow = config.RainbowMode;
-        if (ImGui.Checkbox("Rainbow mode (overrides color)", ref rainbow))
-            Change(() => config.RainbowMode = rainbow);
     }
 
     private void DrawBehaviour()
