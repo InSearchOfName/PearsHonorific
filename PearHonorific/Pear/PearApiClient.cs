@@ -29,7 +29,6 @@ public sealed class PearApiClient : IDisposable
     private readonly object stateLock = new();
 
     private CancellationTokenSource? cts;
-    private Task? loop;
     private SongInfo? song;
     private bool isPlaying;
     private double position;
@@ -71,14 +70,14 @@ public sealed class PearApiClient : IDisposable
         Stop();
         cts = new CancellationTokenSource();
         var token = cts.Token;
-        loop = Task.Run(() => RunAsync(token), token);
+        _ = Task.Run(() => RunAsync(token), token);
     }
 
     public void Stop()
     {
         try { cts?.Cancel(); } catch { /* already disposed */ }
+        cts?.Dispose();
         cts = null;
-        loop = null;
         Status = PearStatus.Disconnected;
         lock (stateLock) { song = null; isPlaying = false; position = 0; }
     }

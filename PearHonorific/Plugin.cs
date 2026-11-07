@@ -116,7 +116,7 @@ public sealed class Plugin : IDalamudPlugin
 
     private void OnTerritoryChanged(uint territory) => ForceResend();
 
-    private bool IsAfk() => ObjectTable.LocalPlayer?.OnlineStatus.RowId == AfkOnlineStatusId;
+    private static bool IsAfk() => ObjectTable.LocalPlayer?.OnlineStatus.RowId == AfkOnlineStatusId;
 
     private void OnFrameworkUpdate(IFramework framework)
     {
@@ -130,12 +130,7 @@ public sealed class Plugin : IDalamudPlugin
         var connected = Pear.Status == PearStatus.Connected;
         var disconnectedTooLong = !connected && (now - Pear.LastConnectedUtc).TotalSeconds > DisconnectGraceSecs;
 
-        var shouldClear = song == null
-            || disconnectedTooLong
-            || (Configuration.ClearWhenPaused && !Pear.IsPlaying)
-            || (Configuration.PauseWhenAfk && afk && (now - notAfkSinceUtc).TotalSeconds > AfkGraceSecs);
-
-        if (shouldClear || song == null)
+        if (song == null || disconnectedTooLong || ShouldClearForState(afk, now))
         {
             ClearTitle();
             return;
@@ -181,6 +176,10 @@ public sealed class Plugin : IDalamudPlugin
             LastTitle = title;
         }
     }
+
+    private bool ShouldClearForState(bool afk, DateTime now)
+        => (Configuration.ClearWhenPaused && !Pear.IsPlaying)
+            || (Configuration.PauseWhenAfk && afk && (now - notAfkSinceUtc).TotalSeconds > AfkGraceSecs);
 
     private void ClearTitle()
     {
