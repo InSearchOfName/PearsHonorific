@@ -43,6 +43,7 @@ public sealed class Plugin : IDalamudPlugin
     private DateTime lastRenderUtc = DateTime.MinValue;
     private DateTime notAfkSinceUtc = DateTime.UtcNow;
     private bool warnedTruncate;
+    private DateTime scrollStartUtc = DateTime.UtcNow;
     private string? lastSongId;
 
     public Plugin()
@@ -140,24 +141,30 @@ public sealed class Plugin : IDalamudPlugin
             return;
         }
 
+        if (song.VideoId != lastSongId)
+        {
+            lastSongId = song.VideoId;
+            warnedTruncate = false;
+            scrollStartUtc = now;
+        }
+
         var interval = Configuration.RainbowMode ? RainbowRenderIntervalSecs : TextRenderIntervalSecs;
+        if (Configuration.ScrollLongTitles)
+            interval = Math.Min(interval, 1.0 / Math.Max(Configuration.ScrollSpeed, 0.1f));
         if ((now - lastRenderUtc).TotalSeconds < interval) return;
         lastRenderUtc = now;
 
         var elapsed = Pear.ElapsedSeconds;
-        var title = renderer.Render(Configuration.TitleTemplate, song, elapsed, out var error, out var truncated);
+        var full = renderer.Render(Configuration.TitleTemplate, song, elapsed, out var error);
         LastError = error;
-        if (title == null)
+        if (full == null)
         {
             ClearTitle();
             return;
         }
 
-        if (song.VideoId != lastSongId)
-        {
-            lastSongId = song.VideoId;
-            warnedTruncate = false;
-        }
+        var scrollSecs = (now - scrollStartUtc).TotalSeconds;
+        var title = TitleRenderingService.Fit(full, Configuration.ScrollLongTitles, scrollSecs, Configuration.ScrollSpeed, out var truncated);
         if (truncated && !warnedTruncate)
         {
             warnedTruncate = true;
