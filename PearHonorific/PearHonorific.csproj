@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Dalamud.NET.Sdk/15.0.0">
+  <PropertyGroup>
+    <Version>0.0.0.1</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <!-- Manifest fields (see https://github.com/goatcorp/DalamudPackager/blob/827d88dc/DalamudPackager/DalamudPackager.cs#L420) -->
+    <Author>InSearchOfName</Author>
+    <Name>Pear Honorific</Name>
+    <Punchline>Your Pear Desktop (YouTube Music) song as an honorific.</Punchline>
+    <Description>Shows the song you are playing in Pear Desktop as your Honorific title.
+Requires the Honorific plugin and Pear Desktop's built-in API Server plugin.</Description>
+    <RepoUrl>https://github.com/InSearchOfName/PearsHonorific</RepoUrl>
+    <Tags>pear;youtube music;music;activity;honorific</Tags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Scriban" Version="7.2.6" />
+  </ItemGroup>
+</Project>
