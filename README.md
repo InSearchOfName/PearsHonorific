@@ -2,11 +2,26 @@
 
 A [Dalamud](https://dalamud.dev) plugin for FFXIV that shows the song playing in [Pear Desktop](https://github.com/pear-devs/pear-desktop) (YouTube Music) as your [Honorific](https://github.com/Caraxi/Honorific) title. Inspired by [SpotifyHonorific](https://valiice.github.io/SpotifyHonorific/).
 
+## Installation
+
+Pear Honorific is distributed through a custom Dalamud plugin repository:
+
+1. In-game, open `/xlsettings` and go to the **Experimental** tab.
+2. Under **Custom Plugin Repositories**, paste this URL, click the **+** button, then click the save button:
+
+   ```
+   https://github.com/InSearchOfName/PearsHonorific/releases/latest/download/repo.json
+   ```
+
+3. Open `/xlplugins`, search for **Pear Honorific** under *All Plugins*, and click **Install**.
+
+Updates are delivered through the same repository whenever a new release is published.
+
 ## Setup
 
 1. Install the **Honorific** plugin in-game.
 2. In Pear Desktop, enable the built-in **API Server** plugin (Plugins menu). It listens on port `26538` by default.
-3. Install Pear Honorific and open `/pearhonorific`.
+3. Install Pear Honorific (see [Installation](#installation)) and open `/pearhonorific`.
 4. If you changed Pear's API Server port, type it into the **Port** field (it defaults to `26538`; "Reset to default" restores it).
 5. Pear shows an Allow/Deny prompt the first time. Allow it, and play something.
 

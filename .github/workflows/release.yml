@@ -37,13 +37,21 @@ jobs:
     - name: Build
       run: dotnet build PearHonorific/PearHonorific.csproj --configuration Release -p:Version=${{ steps.version.outputs.version }}
 
+    - name: Count downloads
+      id: downloads
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        $count = ./.github/scripts/get-download-count.ps1 -Repository "${{ github.repository }}"
+        "count=$count" >> $env:GITHUB_OUTPUT
+
     - name: Generate repo.json
       run: >
         ./.github/scripts/make-repo-json.ps1
+        -DownloadCount ${{ steps.downloads.outputs.count }}
         -ManifestPath PearHonorific/bin/Release/PearHonorific/PearHonorific.json
         -Repository "${{ github.repository }}"
         -Tag "${{ github.event.release.tag_name }}"
-        -Branch "${{ github.event.repository.default_branch }}"
         -OutPath repo.json
 
     - name: Upload to release
