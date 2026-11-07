@@ -15,6 +15,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
 
     - name: Install .NET
       uses: actions/setup-dotnet@v5
@@ -26,8 +28,26 @@ jobs:
         Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile latest.zip
         Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
 
+    - name: Install SonarScanner
+      run: dotnet tool install --global dotnet-sonarscanner
+
+    - name: Begin SonarCloud analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: >
+        dotnet sonarscanner begin
+        /k:"InSearchOfName_PearsHonorific"
+        /o:"insearchofname"
+        /d:sonar.token="$env:SONAR_TOKEN"
+        /d:sonar.host.url="https://sonarcloud.io"
+
     - name: Build with dotnet
       run: dotnet build --configuration Release
+
+    - name: End SonarCloud analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: dotnet sonarscanner end /d:sonar.token="$env:SONAR_TOKEN"
 
     - name: Store artifacts
       uses: actions/upload-artifact@v4
