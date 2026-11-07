@@ -11,6 +11,7 @@
 Requires the Honorific plugin and Pear Desktop's built-in API Server plugin.</Description>
     <RepoUrl>https://github.com/InSearchOfName/PearsHonorific</RepoUrl>
     <Tags>pear;youtube music;music;activity;honorific</Tags>
+    <IconUrl>https://raw.githubusercontent.com/InSearchOfName/PearsHonorific/master/PearHonorific/images/icon.png</IconUrl>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,7 +3,8 @@ param(
     [Parameter(Mandatory)] [string] $Repository, # owner/name
     [Parameter(Mandatory)] [string] $Tag,
     [Parameter(Mandatory)] [string] $OutPath,
-    [string] $Branch = 'master'
+    [string] $Branch = 'master',
+    [int] $DownloadCount = 0
 )
 
 # Builds the custom Dalamud plugin repository file (repo.json) from the manifest DalamudPackager generated.
@@ -18,7 +19,8 @@ $extra = [ordered]@{
     DownloadLinkUpdate  = $download
     DownloadLinkTesting = $download
     IconUrl             = "https://raw.githubusercontent.com/$Repository/$Branch/PearHonorific/images/icon.png"
-    LastUpdate          = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+    DownloadCount       = $DownloadCount
+    LastUpdate          =[DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
 }
 foreach ($key in $extra.Keys)
 {

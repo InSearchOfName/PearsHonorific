@@ -1,0 +1,35 @@
+name: Update download count
+
+# repo.json is generated at release time, so refresh its DownloadCount from the GitHub release download totals daily.
+on:
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: windows-2022
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Refresh repo.json on the latest release
+      run: |
+        $repo = "${{ github.repository }}"
+        $tag = gh release view --repo $repo --json tagName --jq .tagName
+        if (-not $tag) { Write-Host "No release yet"; exit 0 }
+
+        gh release download $tag --repo $repo --pattern repo.json --clobber
+        $count = [int](./.github/scripts/get-download-count.ps1 -Repository $repo)
+
+        $json = Get-Content -Raw repo.json | ConvertFrom-Json
+        $json[0].DownloadCount = $count
+        ConvertTo-Json -InputObject @($json) -Depth 5 | Set-Content -Encoding utf8 repo.json
+
+        gh release upload $tag repo.json --repo $repo --clobber
