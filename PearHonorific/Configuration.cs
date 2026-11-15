@@ -30,9 +30,15 @@ public class Configuration : IPluginConfiguration
     // Title appearance
     // Rotates every 30s: "Listening to Pears" (0-10s), song title (10-20s), artist (20-30s)
     public const string DefaultTitleTemplate =
-        "♪{{- if (context.secs_elapsed % 30) < 10 -}}    Listening to Pears" +
-        "{{- else if (context.secs_elapsed % 30) < 20 -}}    {{ song.title | string.truncate 30 }}" +
-        "{{- else -}}    {{ song.artist | string.truncate 30 }}{{- end -}}♪";
+        "♪\n" +
+        "{{- if (context.secs_elapsed % 30) < 10 -}}\n" +
+        "    Listening to Pears\n" +
+        "{{- else if (context.secs_elapsed % 30) < 20 -}}\n" +
+        "    {{ song.title | string.truncate 30 }}\n" +
+        "{{- else -}}\n" +
+        "    {{ song.artist | string.truncate 30 }}\n" +
+        "{{- end -}}\n" +
+        "♪";
     public string TitleTemplate { get; set; } = DefaultTitleTemplate;
     public bool IsPrefix { get; set; } = false;
     public bool UseColor { get; set; } = false;
