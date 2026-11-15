@@ -145,11 +145,11 @@ public sealed class ConfigWindow : Window, IDisposable
                 Change(() => config.ScrollSpeed = speed);
         }
 
-        var noteColor = new Vector4(1f, 0.85f, 0.3f, 1f);
-        ImGui.TextColored(noteColor, "Note:");
-        ImGui.TextColored(noteColor, "- Titles cut short with string.truncate fit in 32 characters, so they won't scroll.");
         if (config.ScrollLongTitles)
         {
+            var noteColor = new Vector4(1f, 0.85f, 0.3f, 1f);
+            ImGui.TextColored(noteColor, "Note:");
+            ImGui.TextColored(noteColor, "- Titles cut short with string.truncate fit in 32 characters, so they won't scroll.");
             ImGui.TextColored(noteColor, "- Lightless Sync can't update titles as fast as the speed set here,");
             ImGui.TextColored(noteColor, "  so the scrolling may look choppy or odd to other players.");
         }
