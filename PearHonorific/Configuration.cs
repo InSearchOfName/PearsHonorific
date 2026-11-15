@@ -28,7 +28,12 @@ public class Configuration : IPluginConfiguration
     public string AccessToken { get; set; } = string.Empty;
 
     // Title appearance
-    public string TitleTemplate { get; set; } = "♪ {{ song.title }} - {{ song.artist }}";
+    // Rotates every 30s: "Listening to Pears" (0-10s), song title (10-20s), artist (20-30s)
+    public const string DefaultTitleTemplate =
+        "♪{{- if (context.secs_elapsed % 30) < 10 -}}    Listening to Pears" +
+        "{{- else if (context.secs_elapsed % 30) < 20 -}}    {{ song.title | string.truncate 30 }}" +
+        "{{- else -}}    {{ song.artist | string.truncate 30 }}{{- end -}}♪";
+    public string TitleTemplate { get; set; } = DefaultTitleTemplate;
     public bool IsPrefix { get; set; } = false;
     public bool UseColor { get; set; } = false;
     public Vector3 Color { get; set; } = new(1f, 1f, 1f);

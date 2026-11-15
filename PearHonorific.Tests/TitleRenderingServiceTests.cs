@@ -100,6 +100,21 @@ public class RenderTests
         Assert.Equal("Song - Artist", text);
     }
 
+    [Theory]
+    [InlineData(0, "♪Listening to Pears♪")]
+    [InlineData(9, "♪Listening to Pears♪")]
+    [InlineData(10, "♪Song♪")]
+    [InlineData(19, "♪Song♪")]
+    [InlineData(20, "♪Artist♪")]
+    [InlineData(29, "♪Artist♪")]
+    [InlineData(30, "♪Listening to Pears♪")]
+    public void DefaultTemplateRotatesEvery30Seconds(int secs, string expected)
+    {
+        var svc = new TitleRenderingService();
+        Assert.Equal(expected, svc.Render(Configuration.DefaultTitleTemplate, Song(), secs, out var error));
+        Assert.Null(error);
+    }
+
     [Fact]
     public void ReturnsNullOnEmptyOutput()
     {
