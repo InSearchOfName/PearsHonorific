@@ -74,7 +74,8 @@ public sealed class TitleRenderingService
         ctx.PushGlobal(model);
 
         string text;
-        try { text = template.Render(ctx).Trim(); }
+        // Titles are a single line; line breaks in the template only exist for readability.
+        try { text = template.Render(ctx).Replace("\r", string.Empty).Replace("\n", string.Empty).Trim(); }
         catch (Exception ex)
         {
             error = ex.Message;

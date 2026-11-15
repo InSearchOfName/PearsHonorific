@@ -102,13 +102,14 @@ public sealed class ConfigWindow : Window, IDisposable
         ImGui.TextUnformatted("Title");
 
         var template = config.TitleTemplate;
-        ImGui.SetNextItemWidth(-1);
-        if (ImGui.InputText("##template", ref template, 512))
+        var lineHeight = ImGui.GetTextLineHeight();
+        if (ImGui.InputTextMultiline("##template", ref template, 512, new Vector2(-1, lineHeight * 5)))
         {
             config.TitleTemplate = template;
             config.Save();
         }
         ImGui.TextDisabled("Scriban template. Variables: song.title, song.artist, song.album, song.duration, context.secs_elapsed");
+        ImGui.TextDisabled("Line breaks are ignored in the title, so you can spread long templates over several lines.");
         ImGui.TextDisabled("Example: {{ (song.title | string.truncate 20) }} - {{ song.artist }}");
 
         var preview = plugin.LastTitle ?? "(none)";
