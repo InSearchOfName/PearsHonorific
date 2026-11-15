@@ -103,7 +103,7 @@ public sealed class ConfigWindow : Window, IDisposable
 
         var template = config.TitleTemplate;
         var lineHeight = ImGui.GetTextLineHeight();
-        if (ImGui.InputTextMultiline("##template", ref template, 512, new Vector2(-1, lineHeight * 5)))
+        if (ImGui.InputTextMultiline("##template", ref template, 512, new Vector2(-1, lineHeight * 10)))
         {
             config.TitleTemplate = template;
             config.Save();
@@ -143,11 +143,15 @@ public sealed class ConfigWindow : Window, IDisposable
             ImGui.SetNextItemWidth(120);
             if (ImGui.SliderFloat("chars/sec", ref speed, 0.5f, 6f, "%.1f"))
                 Change(() => config.ScrollSpeed = speed);
+        }
 
-            ImGui.TextColored(new Vector4(1f, 0.85f, 0.3f, 1f),
-                "Note: Lightless Sync can't update titles as fast as the speed set here,");
-            ImGui.TextColored(new Vector4(1f, 0.85f, 0.3f, 1f),
-                "so the scrolling may look choppy or odd to other players.");
+        var noteColor = new Vector4(1f, 0.85f, 0.3f, 1f);
+        ImGui.TextColored(noteColor, "Note:");
+        ImGui.TextColored(noteColor, "- Titles cut short with string.truncate fit in 32 characters, so they won't scroll.");
+        if (config.ScrollLongTitles)
+        {
+            ImGui.TextColored(noteColor, "- Lightless Sync can't update titles as fast as the speed set here,");
+            ImGui.TextColored(noteColor, "  so the scrolling may look choppy or odd to other players.");
         }
     }
 
