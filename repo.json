@@ -1,0 +1,32 @@
+[
+  {
+    "Author": "InSearchOfName",
+    "Name": "Pear Honorific",
+    "InternalName": "PearHonorific",
+    "AssemblyVersion": "0.1.1.0",
+    "Description": "Shows the song you are playing in Pear Desktop as your Honorific title.\r\nRequires the Honorific plugin and Pear Desktop's built-in API Server plugin.",
+    "ApplicableVersion": "any",
+    "RepoUrl": "https://github.com/InSearchOfName/PearsHonorific",
+    "Tags": [
+      "pear",
+      "youtube music",
+      "music",
+      "activity",
+      "honorific"
+    ],
+    "DalamudApiLevel": 15,
+    "LoadRequiredState": 0,
+    "LoadSync": false,
+    "CanUnloadAsync": false,
+    "LoadPriority": 0,
+    "Punchline": "Your Pear Desktop (YouTube Music) song as an honorific.",
+    "AcceptsFeedback": true,
+    "IsHide": false,
+    "IsTestingExclusive": false,
+    "DownloadLinkInstall": "https://github.com/InSearchOfName/PearsHonorific/releases/download/v0.1.1/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/InSearchOfName/PearsHonorific/releases/download/v0.1.1/latest.zip",
+    "DownloadLinkTesting": "https://github.com/InSearchOfName/PearsHonorific/releases/download/v0.1.1/latest.zip",
+    "DownloadCount": 4,
+    "LastUpdate": 1794095097
+  }
+]

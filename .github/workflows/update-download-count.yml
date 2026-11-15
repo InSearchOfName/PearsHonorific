@@ -33,3 +33,8 @@ jobs:
         ConvertTo-Json -InputObject @($json) -Depth 5 | Set-Content -Encoding utf8 repo.json
 
         gh release upload $tag repo.json --repo $repo --clobber
+
+        git config user.name "InSearchOfName"
+        git config user.email "128755553+InSearchOfName@users.noreply.github.com"
+        git add repo.json
+        git diff --cached --quiet; if ($LASTEXITCODE -ne 0) { git commit -m "Update download count"; git push origin HEAD:master }

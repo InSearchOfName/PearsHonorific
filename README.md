@@ -10,7 +10,7 @@ Pear Honorific is distributed through a custom Dalamud plugin repository:
 2. Under **Custom Plugin Repositories**, paste this URL, click the **+** button, then click the save button:
 
    ```
-   https://github.com/InSearchOfName/PearsHonorific/releases/latest/download/repo.json
+   https://raw.githubusercontent.com/InSearchOfName/PearsHonorific/master/repo.json
    ```
 
 3. Open `/xlplugins`, search for **Pear Honorific** under *All Plugins*, and click **Install**.
