@@ -92,6 +92,15 @@ public class RenderTests
     }
 
     [Fact]
+    public void StripsLineBreaksFromOutput()
+    {
+        var svc = new TitleRenderingService();
+        var text = svc.Render("{{ song.title }}\r\n - \n{{ song.artist }}", Song(), 0, out var error);
+        Assert.Null(error);
+        Assert.Equal("Song - Artist", text);
+    }
+
+    [Fact]
     public void ReturnsNullOnEmptyOutput()
     {
         var svc = new TitleRenderingService();
