@@ -2,7 +2,7 @@ name: Release PearHonorific
 
 # Publish a GitHub release (tag like v1.0.0). This builds the plugin and attaches latest.zip and repo.json to it.
 # Users add this custom repository URL in Dalamud:
-#   https://github.com/<owner>/<repo>/releases/latest/download/repo.json
+#   https://raw.githubusercontent.com/<owner>/<repo>/master/repo.json
 on:
   release:
     types: [published]
@@ -58,3 +58,13 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: gh release upload "${{ github.event.release.tag_name }}" PearHonorific/bin/Release/PearHonorific/latest.zip repo.json --clobber
+
+    # The raw URL has no redirects and no gap while assets are uploaded, so it is the one users add.
+    - name: Commit repo.json to master
+      run: |
+        git fetch origin master
+        git checkout -B master origin/master
+        git config user.name "InSearchOfName"
+        git config user.email "128755553+InSearchOfName@users.noreply.github.com"
+        git add repo.json
+        git diff --cached --quiet; if ($LASTEXITCODE -ne 0) { git commit -m "Update repo.json for ${{ github.event.release.tag_name }}"; git push origin master }
